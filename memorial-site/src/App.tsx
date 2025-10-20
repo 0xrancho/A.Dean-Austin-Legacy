@@ -8,11 +8,11 @@ function App() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#E0D8C5' }}>
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-12 md:py-20">
+      <div className="container mx-auto px-6 py-12 md:py-20">
         <div className="max-w-4xl mx-auto text-center">
           {/* Hero Portrait */}
-          <div className="mb-8">
-            <div className="w-full max-w-sm h-[400px] sm:w-96 sm:h-[500px] md:w-[500px] md:h-[650px] mx-auto">
+          <div className="mb-8 px-2">
+            <div className="w-full max-w-[280px] h-[350px] sm:max-w-sm sm:h-[450px] md:w-[500px] md:h-[650px] mx-auto">
               <img
                 src="/hero-portrait.jpg"
                 alt="Arthur 'Dean' Austin"
