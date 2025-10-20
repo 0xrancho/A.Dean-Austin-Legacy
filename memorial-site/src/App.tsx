@@ -12,7 +12,7 @@ function App() {
         <div className="max-w-4xl mx-auto text-center">
           {/* Hero Portrait */}
           <div className="mb-8">
-            <div className="w-96 h-[500px] md:w-[500px] md:h-[650px] mx-auto">
+            <div className="w-full max-w-sm h-[400px] sm:w-96 sm:h-[500px] md:w-[500px] md:h-[650px] mx-auto">
               <img
                 src="/hero-portrait.jpg"
                 alt="Arthur 'Dean' Austin"
@@ -56,7 +56,7 @@ function App() {
           {/* Submit Button */}
           <button
             onClick={() => setShowForm(true)}
-            className="text-white font-semibold text-lg px-6 py-3 transform transition hover:scale-105 focus:outline-none focus:ring-4"
+            className="text-white font-semibold text-base sm:text-lg px-6 py-3 transform transition hover:scale-105 focus:outline-none focus:ring-4"
             style={{
               backgroundColor: '#1A1F2E',
               borderColor: '#1A1F2E',
