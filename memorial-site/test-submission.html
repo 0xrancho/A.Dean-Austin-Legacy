@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Memorial Site - Connection Test</title>
+</head>
+<body>
+    <h1>Testing Memorial Site Connections</h1>
+    <div id="results"></div>
+
+    <script type="module">
+        const SUPABASE_URL = 'https://pfhmxffrczflqqaqjqgr.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmaG14ZmZyY3pmbHFxYXFqcWdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MTk2NzgsImV4cCI6MjA3NjM5NTY3OH0.2SunUP53PgtrlUzLJ4E6mB2vidxJknIHvPV6z3Y77RI';
+
+        const results = document.getElementById('results');
+
+        async function test() {
+            results.innerHTML = '<p>Testing connections...</p>';
+
+            // Test 1: Supabase connection
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                results.innerHTML += `<p>✅ Supabase connection: OK (${response.status})</p>`;
+            } catch (e) {
+                results.innerHTML += `<p>❌ Supabase connection failed: ${e.message}</p>`;
+            }
+
+            // Test 2: Check table exists
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/memorial_submissions?limit=1`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                const data = await response.json();
+                results.innerHTML += `<p>✅ Table 'memorial_submissions' exists: ${JSON.stringify(data)}</p>`;
+            } catch (e) {
+                results.innerHTML += `<p>❌ Table check failed: ${e.message}</p>`;
+            }
+
+            // Test 3: Try to insert
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/memorial_submissions`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        name: 'Test User',
+                        email: 'test@example.com',
+                        notify_when_ready: true,
+                        memory: 'This is a test memory',
+                        recaptcha_token: 'test-token'
+                    })
+                });
+
+                if (response.ok || response.status === 201) {
+                    results.innerHTML += `<p>✅ Insert test: SUCCESS</p>`;
+                } else {
+                    const error = await response.text();
+                    results.innerHTML += `<p>⚠️ Insert test: ${response.status} - ${error}</p>`;
+                }
+            } catch (e) {
+                results.innerHTML += `<p>❌ Insert test failed: ${e.message}</p>`;
+            }
+
+            results.innerHTML += '<hr><p><strong>Test complete!</strong> Check console for details.</p>';
+        }
+
+        test();
+    </script>
+</body>
+</html>
