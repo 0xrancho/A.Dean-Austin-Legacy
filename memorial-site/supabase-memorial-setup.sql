@@ -13,7 +13,6 @@ create table if not exists memorial_submissions (
   memory text not null,
   tags text,
   file_path text,
-  recaptcha_token text,
   submitted_at timestamp with time zone default now()
 );
 

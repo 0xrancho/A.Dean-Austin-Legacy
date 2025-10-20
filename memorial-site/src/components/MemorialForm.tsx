@@ -12,6 +12,7 @@ export default function MemorialForm({ onClose }: MemorialFormProps) {
     notifyWhenReady: true,
     memory: '',
   })
+  const [honeypot, setHoneypot] = useState('')
   const [tags, setTags] = useState<string[]>([])
   const [currentTag, setCurrentTag] = useState('')
   const [file, setFile] = useState<File | null>(null)
@@ -60,6 +61,14 @@ export default function MemorialForm({ onClose }: MemorialFormProps) {
     setIsSubmitting(true)
 
     try {
+      // Honeypot spam protection
+      if (honeypot) {
+        console.log('Honeypot triggered - likely spam')
+        setError('Submission failed. Please try again.')
+        setIsSubmitting(false)
+        return
+      }
+
       console.log('Starting submission...')
 
       // Upload file if present
@@ -93,7 +102,6 @@ export default function MemorialForm({ onClose }: MemorialFormProps) {
           memory: formData.memory,
           tags: tags.length > 0 ? tags.join('; ') : null,
           file_path: filePath,
-          recaptcha_token: 'local-test', // Bypass for local testing
         })
 
       if (dbError) {
@@ -290,17 +298,26 @@ export default function MemorialForm({ onClose }: MemorialFormProps) {
             )}
           </div>
 
+          {/* Honeypot field - invisible to humans, bots will fill it */}
+          <div style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }} aria-hidden="true">
+            <label htmlFor="website">Website (leave blank)</label>
+            <input
+              type="text"
+              id="website"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+            />
+          </div>
+
           {/* Error Message */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
               {error}
             </div>
           )}
-
-          {/* Dev Note */}
-          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg text-sm">
-            <strong>Note:</strong> reCAPTCHA disabled for local testing. Will be enabled for production.
-          </div>
 
           {/* Submit Button */}
           <div className="flex gap-4">
